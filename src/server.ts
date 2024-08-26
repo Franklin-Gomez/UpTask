@@ -8,5 +8,3 @@ dotenv.config()
 connectDB()
 
 export const app =  express();
-
-
