@@ -10,5 +10,8 @@ connectDB()
 
 export const app =  express();
 
+// leer datos formato json
+app.use( express.json())
+
 // haciendole saber las rutas al server
-app.use('/api/projects' , projectRoutes)
+app.use('/api/projects' , projectRoutes )

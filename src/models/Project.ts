@@ -14,7 +14,6 @@ const ProjectSchema : Schema = new Schema ({
         required : true,
         trim  : true // elimina los espacios 
     },
-
     clientName : { 
         type : String,
         required : true,
