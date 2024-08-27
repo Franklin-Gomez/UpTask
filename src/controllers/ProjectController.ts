@@ -4,6 +4,7 @@ import Project from "../models/Project"
 // static ? = no requiere ser instanciado
 export class ProjectController { 
     static createProject = async ( req : Request , res : Response) => { 
+        
         const data = new Project(req.body)
 
         try {
