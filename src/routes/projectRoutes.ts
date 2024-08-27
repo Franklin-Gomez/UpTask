@@ -47,7 +47,7 @@ router.put('/:id' ,
     body('clientName')
         .notEmpty().withMessage('El Nombre del cliente es Obligatorio')
     ,
-    
+
     body('description')
         .notEmpty().withMessage('la descripcion del Proyecto es Obligatorio')
     ,
@@ -55,6 +55,13 @@ router.put('/:id' ,
     handleInputErrors
 
 , ProjectController.updateProject ) 
+
+router.delete('/:id', 
+
+    param('id')
+    .isMongoId().withMessage('id no valido')
+
+, ProjectController.deleteProject )
 
 
 

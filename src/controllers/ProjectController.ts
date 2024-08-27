@@ -76,4 +76,33 @@ export class ProjectController {
         }
 
     }
+
+    static deleteProject = async ( req : Request , res : Response ) =>  {
+
+        try {
+            
+            const id  = req.params.id
+
+            const data = await Project.findById(id)
+            
+            if(!data) { 
+                const error = new Error('proyecto no encontrado')
+                return res.status(404).json({ error : error.message})
+            }
+
+            /*
+                COMPROBACIOENS ADICIONALES DE PERMISOS DEL USUARIO
+            */
+
+            await data.deleteOne()
+
+            res.send('Proyject eliminado')
+
+
+        } catch (error) {
+
+            console.log( error)
+
+        }
+    }
 }
