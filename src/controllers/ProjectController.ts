@@ -18,6 +18,19 @@ export class ProjectController {
     }
 
     static getAllProjects = async ( req : Request , res : Response) => { 
-        res.send('todos los proyectos')
+        try {
+
+            const data =  await Project.find({})
+            
+            res.json( data)
+
+
+        } catch (error) {
+            console.log( error )
+        }
+    }
+
+    static getOneProjects = async ( req : Request , res : Response ) => { 
+        res.send('un proyecto papu')
     }
 }
