@@ -31,6 +31,25 @@ export class ProjectController {
     }
 
     static getOneProjects = async ( req : Request , res : Response ) => { 
-        res.send('un proyecto papu')
+        
+        try {
+
+            const id = req.params.id
+    
+            const data = await Project.findById( id )// buscamos el registro
+    
+            if(!data){
+                const error = new Error('proyecto no encontrado')
+                return res.status(404).json( {error : error.message})
+            }
+    
+            // devolvemos al front
+            res.json( data )
+            
+        } catch (error) {
+
+            console.log( error )            
+            
+        }
     }
 }
