@@ -18,8 +18,21 @@ export class TaskControllers {
         
         } catch (error) {
 
-            console.log( error  )
+            return res.status(404).json({ error : error.message})
         
+        }
+    }
+
+    static geProjectTasks = async ( req : Request , res : Response) => { 
+        try {
+            
+            // nos traemos todos los elementos que concuerden cel filter
+            const tasks = await Task.find({ project : req.project.id})
+            res.json( tasks )
+
+
+        } catch (error) {
+            return res.status(404).json({ error : error.message})
         }
     }
 }

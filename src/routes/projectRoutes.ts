@@ -82,6 +82,12 @@ router.post('/:projectId/tasks',
 
 TaskControllers.createTasks)
 
+router.get('/:projectId/tasks',
+
+    validateProjectExists,
+
+TaskControllers.geProjectTasks)
+
 
 
 
