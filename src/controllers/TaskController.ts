@@ -1,5 +1,4 @@
 import type { Request , Response } from 'express'
-import Project from '../models/Project'
 import Task from '../models/Tarea'
 
 export class TaskControllers { 
@@ -10,11 +9,11 @@ export class TaskControllers {
 
             const task = new Task(req.body)
             task.project = req.project.id
-            await task.save()
 
             req.project.tasks.push( task.id )
-            await req.project.save()
 
+            await Promise.allSettled([task.save() , req.project.save()])
+  
             res.send('Tarea Agregada Correctamente')
         
         } catch (error) {
