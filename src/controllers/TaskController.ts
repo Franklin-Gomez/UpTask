@@ -25,9 +25,10 @@ export class TaskControllers {
 
     static geProjectTasks = async ( req : Request , res : Response) => { 
         try {
-            
+        
             // nos traemos todos los elementos que concuerden cel filter
-            const tasks = await Task.find({ project : req.project.id})
+            const tasks = await Task.find({ project : req.project.id}).populate('project')
+
             res.json( tasks )
 
 
