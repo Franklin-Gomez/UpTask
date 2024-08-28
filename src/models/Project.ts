@@ -6,7 +6,7 @@ export type ProjectType = Document & { // Heredar todo el typado de document
     projectName : string
     clientName : string
     description : string
-    taks : PopulatedDoc<TaskType & Document>[] //<--nos traemos la informacion de la tarea
+    tasks : PopulatedDoc<TaskType & Document>[] //<--nos traemos la informacion de la tarea
 }
 
 // esto es de mongoose
