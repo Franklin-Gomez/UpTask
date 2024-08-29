@@ -36,7 +36,7 @@ export class ProjectController {
 
             const id = req.params.id
     
-            const data = await Project.findById( id )// buscamos el registro
+            const data = await (await Project.findById( id )).populate('tasks')
     
             if(!data){
                 const error = new Error('proyecto no encontrado')
