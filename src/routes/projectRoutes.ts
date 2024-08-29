@@ -88,6 +88,13 @@ router.get('/:projectId/tasks',
 
 TaskControllers.geProjectTasks)
 
+router.get('/:projectId/tasks/:taskId',
+
+    validateProjectExists,
+
+TaskControllers.getTaskById)
+
+
 
 
 

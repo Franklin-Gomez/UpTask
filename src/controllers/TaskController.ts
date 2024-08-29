@@ -36,4 +36,33 @@ export class TaskControllers {
             return res.status(404).json({ error : error.message})
         }
     }
+ 
+    static getTaskById = async ( req : Request , res : Response ) => { 
+
+        try {
+
+            const { taskId } = req.params
+            const task = await Task.findById( taskId )
+
+            if(!task) { 
+                const error = new Error('tarea no encontrada')
+                return res.status(404).json({ error : error.message })
+            }
+
+            // si la tarea no pertenece al proyecto
+            if( task.project.toString() !== req.project.id ) { 
+                const error = new Error('Accio no valida')
+                return res.status(400).json({ error : error.message})
+            }
+            
+            res.json(task)
+
+
+        } catch (error) {
+
+            return res.status(500).json({ error : 'Hubo un error'})
+
+        }
+    }
+
 }
