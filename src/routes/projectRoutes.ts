@@ -66,6 +66,10 @@ router.delete('/:id',
 , ProjectController.deleteProject )
 
 /** Routes for tasks **/
+
+// valida el proyecto en cada url que encuentre projectId
+router.param('projectId' , validateProjectExists)
+
 router.post('/:projectId/tasks',
 
     body('name')
@@ -78,24 +82,16 @@ router.post('/:projectId/tasks',
 
     handleInputErrors,
 
-    validateProjectExists,
+TaskControllers.createTasks) 
 
-TaskControllers.createTasks)
-
-router.get('/:projectId/tasks',
-
-    validateProjectExists,
-
-TaskControllers.geProjectTasks)
+router.get('/:projectId/tasks', TaskControllers.geProjectTasks)
 
 router.get('/:projectId/tasks/:taskId',
-
-    validateProjectExists,
-
+ 
+    param('taskId')
+        .isMongoId().withMessage('id no valido')
+    ,
+    
 TaskControllers.getTaskById)
-
-
-
-
 
 export default router
