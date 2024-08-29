@@ -16,6 +16,7 @@ export type TaskType = Document & {
     name : string
     description : string
     project: Types.ObjectId //<-- type  para la tarea relacionada
+    status : TaskStatus
 }
 
 export const TaskSchema : Schema = new Schema ({

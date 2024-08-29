@@ -99,20 +99,49 @@ export class TaskControllers {
 
             // eliminando el registro  en db task
             const { taskId } = req.params
-            const task = await Task.findById( taskId , req.body )
+            const task = await Task.findById( taskId )
 
             if(!task) { 
                 const error = new Error('tarea no encontrada')
                 return res.status(404).json({ error : error.message })
             }
 
-            // eliminando el registro
+            // eliminando la referencia que tenemos en project
             req.project.tasks = req.project.tasks.filter( task => task.toString() !== taskId)
 
             await Promise.allSettled([ task.deleteOne() , req.project.save() ])
             
             res.send('Tarea Eliminada Correctamente')
             
+        } catch (error) {
+
+            return res.status(500).json({ error : 'Hubo un error'})
+
+        }
+    }
+
+    static updateStatus =  async ( req : Request , res : Response ) => { 
+
+        try {
+
+            const { taskId } = req.params
+            const { status } = req.body
+
+            const task = await Task.findById( taskId )
+
+            
+            if(!task) { 
+                const error = new Error('tarea no encontrada')
+                return res.status(404).json({ error : error.message })
+            }
+            
+            task.status = status
+
+            await task.save()
+
+            res.send('Tarea actualizada correctamente')
+
+
         } catch (error) {
 
             return res.status(500).json({ error : 'Hubo un error'})
