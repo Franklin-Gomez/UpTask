@@ -69,7 +69,7 @@ export class TaskControllers {
         try {
 
             const { taskId } = req.params
-            const task = await Task.findByIdAndUpdate( taskId , req.body )
+            const task = await Task.findById( taskId )
 
             if(!task) { 
                 const error = new Error('tarea no encontrada')
@@ -81,11 +81,42 @@ export class TaskControllers {
                 const error = new Error('Accio no valida')
                 return res.status(400).json({ error : error.message})
             }
+
+            task.name = req.body.name
+            task.description = req.body.description
+
+            await task.save()
             
             res.send('Tarea Actualizada Correctamente')
             
         } catch (error) {
             return res.status(500).json({ error : 'Hubo un error'})
+        }
+    }
+
+    static deleteTask =  async ( req : Request , res : Response ) => { 
+        try {
+
+            // eliminando el registro  en db task
+            const { taskId } = req.params
+            const task = await Task.findById( taskId , req.body )
+
+            if(!task) { 
+                const error = new Error('tarea no encontrada')
+                return res.status(404).json({ error : error.message })
+            }
+
+            // eliminando el registro
+            req.project.tasks = req.project.tasks.filter( task => task.toString() !== taskId)
+
+            await Promise.allSettled([ task.deleteOne() , req.project.save() ])
+            
+            res.send('Tarea Eliminada Correctamente')
+            
+        } catch (error) {
+
+            return res.status(500).json({ error : 'Hubo un error'})
+
         }
     }
 
