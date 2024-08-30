@@ -33,3 +33,15 @@ export async function taskExists( req : Request , res : Response , next : NextFu
 
     }
 }
+
+export const taskBelongsToProject = ( req : Request , res : Response , next : NextFunction ) => { 
+
+    // si la tarea no pertenece al proyecto
+    if( req.task.project.toString() !== req.project.id.toString() ) { 
+        const error = new Error('La tarea no pertenece a este proyecto')
+        return res.status(400).json({ error : error.message})
+    }
+
+    next()
+
+}

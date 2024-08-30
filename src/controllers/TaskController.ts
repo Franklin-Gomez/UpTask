@@ -42,10 +42,10 @@ export class TaskControllers {
         try {
 
             // si la tarea no pertenece al proyecto
-            if( req.task.project.toString() !== req.project.id ) { 
-                const error = new Error('Accio no valida')
-                return res.status(400).json({ error : error.message})
-            }
+            // if( req.task.project.toString() !== req.project.id ) { 
+            //     const error = new Error('Accio no valida')
+            //     return res.status(400).json({ error : error.message})
+            // }
             
             res.json(req.task)
 
@@ -60,10 +60,10 @@ export class TaskControllers {
         try {
 
             // si la tarea no pertenece al proyecto
-            if( req.task.project.toString() !== req.project.id ) { 
-                const error = new Error('Accio no valida')
-                return res.status(400).json({ error : error.message})
-            }
+            // if( req.task.project.toString() !== req.project.id ) { 
+            //     const error = new Error('Accio no valida')
+            //     return res.status(400).json({ error : error.message})
+            // }
 
             req.task.name = req.body.name
             req.task.description = req.body.description
