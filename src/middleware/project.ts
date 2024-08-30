@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-export async function validateProjectExists( req : Request , res : Response , next : NextFunction) { 
+export async function ProjectExists( req : Request , res : Response , next : NextFunction) { 
 
     try {
         const { projectId } = req.params

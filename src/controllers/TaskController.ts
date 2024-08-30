@@ -41,22 +41,13 @@ export class TaskControllers {
 
         try {
 
-            const { taskId } = req.params
-            const task = await Task.findById( taskId )
-
-            if(!task) { 
-                const error = new Error('tarea no encontrada')
-                return res.status(404).json({ error : error.message })
-            }
-
             // si la tarea no pertenece al proyecto
-            if( task.project.toString() !== req.project.id ) { 
+            if( req.task.project.toString() !== req.project.id ) { 
                 const error = new Error('Accio no valida')
                 return res.status(400).json({ error : error.message})
             }
             
-            res.json(task)
-
+            res.json(req.task)
 
         } catch (error) {
 
@@ -68,24 +59,16 @@ export class TaskControllers {
     static updateTask = async ( req : Request , res : Response ) => { 
         try {
 
-            const { taskId } = req.params
-            const task = await Task.findById( taskId )
-
-            if(!task) { 
-                const error = new Error('tarea no encontrada')
-                return res.status(404).json({ error : error.message })
-            }
-
             // si la tarea no pertenece al proyecto
-            if( task.project.toString() !== req.project.id ) { 
+            if( req.task.project.toString() !== req.project.id ) { 
                 const error = new Error('Accio no valida')
                 return res.status(400).json({ error : error.message})
             }
 
-            task.name = req.body.name
-            task.description = req.body.description
+            req.task.name = req.body.name
+            req.task.description = req.body.description
 
-            await task.save()
+            await req.task.save()
             
             res.send('Tarea Actualizada Correctamente')
             
@@ -97,19 +80,10 @@ export class TaskControllers {
     static deleteTask =  async ( req : Request , res : Response ) => { 
         try {
 
-            // eliminando el registro  en db task
-            const { taskId } = req.params
-            const task = await Task.findById( taskId )
-
-            if(!task) { 
-                const error = new Error('tarea no encontrada')
-                return res.status(404).json({ error : error.message })
-            }
-
             // eliminando la referencia que tenemos en project
-            req.project.tasks = req.project.tasks.filter( task => task.toString() !== taskId)
+            req.project.tasks = req.project.tasks.filter( task => task.toString() !== req.task.id.toString())
 
-            await Promise.allSettled([ task.deleteOne() , req.project.save() ])
+            await Promise.allSettled([ req.task.deleteOne() , req.project.save() ])
             
             res.send('Tarea Eliminada Correctamente')
             
@@ -124,22 +98,13 @@ export class TaskControllers {
 
         try {
 
-            const { taskId } = req.params
             const { status } = req.body
-
-            const task = await Task.findById( taskId )
-
             
-            if(!task) { 
-                const error = new Error('tarea no encontrada')
-                return res.status(404).json({ error : error.message })
-            }
-            
-            task.status = status
+            req.task.status = status
 
-            await task.save()
+            await req.task.save()
 
-            res.send('Tarea actualizada correctamente')
+            res.send('Status actualizada correctamente')
 
 
         } catch (error) {
