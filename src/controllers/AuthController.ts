@@ -7,6 +7,15 @@ export class AuthController {
     static createAccount = async ( req : Request  , res  : Response ) => { 
         try {
 
+            // prevenir duplicados 
+            const userExists = await User.findOne(  {email : req.body.email} )
+            
+            if( userExists) { 
+                const error = new Error("El Usuario ya esta registrado")
+                return res.status(409).json({ error : error.message })
+            }
+            
+            // crear nuevo usuario
             const user = new User( req.body )
 
             // Hash password
