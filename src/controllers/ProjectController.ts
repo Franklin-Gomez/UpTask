@@ -103,7 +103,7 @@ export class ProjectController {
 
             await data.deleteOne()
 
-            res.send('Proyject eliminado')
+            res.send('Proyect eliminado')
 
 
         } catch (error) {
