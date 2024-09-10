@@ -1,7 +1,17 @@
 import { Request , Response } from "express";
+import User from "../models/User";
 
 export class AuthController { 
     static createAccount = async ( req : Request  , res  : Response ) => { 
-        res.send('desde api/auth/controller')
+        try {
+
+            const user = new User( req.body )
+            await user.save()
+
+            res.send('Cuenta creada, revisa tu email para confirmarla')
+
+        } catch (error) {
+            res.status(400).json({error : 'Hubo un error' })
+        }
     }
 }
