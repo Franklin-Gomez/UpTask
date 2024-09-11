@@ -49,12 +49,20 @@ export class AuthController {
             
             const { token } = req.body
 
+            // buscando en la db
             const tokenExist = await Token.findOne( {token : token} )
 
+            // en caso que no exista token 
             if( !tokenExist ) { 
                 const error = new Error('Token no valido')
                 return res.status(401).json({ error : error.message })
             }
+
+            const user = await User.findById( tokenExist.user )
+            user.confirmed = true // cambiamos el confirmed
+
+            await Promise.allSettled([ user.save() , tokenExist.deleteOne()])
+            res.send('Cuenta confirmada correctamente ')
 
         } catch (error) {
 
