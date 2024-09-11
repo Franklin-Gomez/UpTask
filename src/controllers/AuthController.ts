@@ -55,7 +55,7 @@ export class AuthController {
             // en caso que no exista token 
             if( !tokenExist ) { 
                 const error = new Error('Token no valido')
-                return res.status(401).json({ error : error.message })
+                return res.status(404).json({ error : error.message })
             }
 
             const user = await User.findById( tokenExist.user )
@@ -80,6 +80,28 @@ export class AuthController {
 
             if(!user){
                 const error = new Error('Usuario no encontrado')
+                return res.status(404).json({ error : error.message })
+            }
+
+            // comprobar si esta confirmado 
+            if(!user.confirmed){
+
+                //mandamos un token nuevamente
+                const token = new Token()
+                token.token = generateToken()
+                token.user = user.id
+
+                await token.save()
+
+                // enviar email
+                AuthEmail.sendConfirmationEmail( { 
+                    email : user.email, 
+                    name : user.name,
+                    token : token.token
+                })
+
+
+                const error = new Error('Usuario no Confirmado , hemos enviado un token a tu correo electronico')
                 return res.status(401).json({ error : error.message })
             }
 
