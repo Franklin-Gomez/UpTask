@@ -16,7 +16,7 @@ const tokenSchema : Schema = new Schema ({
         ref : 'User' // donde encontrara la informacion
     },
     createdAt : { 
-        type : String,
+        type : Date,
         default :  Date.now(), // genera le fecha en automatico una vez se crea el objeto
         expires : '10m' // despues de un 1 se elimina en automatico
     },
