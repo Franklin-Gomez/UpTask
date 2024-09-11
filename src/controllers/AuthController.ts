@@ -1,9 +1,9 @@
 import { Request , Response } from "express";
 import User from "../models/User";
-import bcrypt from 'bcrypt'
 import { hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
+import { transport } from "../config/nodemailer";
 
 export class AuthController { 
     static createAccount = async ( req : Request  , res  : Response ) => { 
@@ -27,6 +27,15 @@ export class AuthController {
             const token = new Token()
             token.token = generateToken()
             token.user = user.id
+
+            // enviar email
+            await transport.sendMail({
+                from: 'UpTask <admin@uptask.com>',
+                to : user.email,
+                subject : 'UpTask - Confirma tu cuenta',
+                text : 'UpTask - Confirma tu cuenta',
+                html : '<p> Probando e-mail </p>'
+            })
 
             await Promise.allSettled([ user.save() , token.save()])
 
