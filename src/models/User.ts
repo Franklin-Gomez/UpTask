@@ -16,8 +16,7 @@ const userSchema : Schema = new Schema ({
     },
     password : { 
         type : String,
-        required : true,
-        lowercase : true
+        required : true
     },
     name : { 
         type : String,
@@ -25,7 +24,6 @@ const userSchema : Schema = new Schema ({
     },
     confirmed : { 
         type : Boolean,
-        required : true,
         default : false
     },
 })

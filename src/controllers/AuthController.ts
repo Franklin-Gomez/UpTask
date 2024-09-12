@@ -1,6 +1,6 @@
 import { Request , Response } from "express";
 import User from "../models/User";
-import { hashPassword } from "../utils/auth";
+import { checkPassword, hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
 import { AuthEmail } from "../email/AuthEmail";
@@ -105,6 +105,10 @@ export class AuthController {
                 return res.status(401).json({ error : error.message })
             }
 
+            // Revisar password 
+            const isPasswordCorrect = await checkPassword( password , user.password )
+
+            console.log( isPasswordCorrect )
 
         } catch (error) {
 
