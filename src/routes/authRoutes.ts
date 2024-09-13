@@ -32,7 +32,7 @@ AuthController.createAccount )
 router.post('/confirm-account' , 
 
     body('token')
-        .notEmpty().withMessage('El Nombre no puede ir Vacio'),
+        .notEmpty().withMessage('El Token no puede ir Vacio'),
     
     handleInputErrors,
 

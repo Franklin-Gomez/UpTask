@@ -50,7 +50,7 @@ export class AuthController {
             const { token } = req.body
 
             // buscando en la db
-            const tokenExist = await Token.findOne( {token : token} )
+            const tokenExist = await Token.findOne( { token } )
 
             // en caso que no exista token 
             if( !tokenExist ) { 
@@ -60,6 +60,8 @@ export class AuthController {
 
             const user = await User.findById( tokenExist.user )
             user.confirmed = true // cambiamos el confirmed
+            
+
 
             await Promise.allSettled([ user.save() , tokenExist.deleteOne()])
             res.send('Cuenta confirmada correctamente ')
