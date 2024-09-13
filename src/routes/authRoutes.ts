@@ -50,4 +50,13 @@ router.post('/login' ,
 
 AuthController.login)
 
+router.post('/request-code' , 
+
+    body('email')
+        .notEmpty().withMessage('El Email no puede ir Vacio'),
+    
+    handleInputErrors,
+
+AuthController.requestConfirmationCode)
+
 export default router
