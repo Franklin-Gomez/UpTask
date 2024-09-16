@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { AuthController } from '../controllers/AuthController'
-import { body } from 'express-validator'
+import { body, param } from 'express-validator'
 import { handleInputErrors } from '../middleware/validation'
 
 const router = Router()
@@ -76,5 +76,26 @@ router.post('/validate-token' ,
     handleInputErrors,
 
 AuthController.validateToken)
+
+router.post('/update-password/:token' , 
+
+    param('token')
+        .isNumeric().withMessage('El Token no es valido'),
+
+    body('password')
+        .isLength({min : 8}).withMessage('El password es muy corto , debe ser mayor a 8  caracteres'),
+
+    body('password_confirmation').custom(( value , { req }) => {
+
+        if( value !== req.body.password) { 
+            throw new Error('Las Password no son iguales')
+        }
+
+        return true
+    }),
+    
+    handleInputErrors,
+
+AuthController.UpdatePasswordWithToken)
 
 export default router
