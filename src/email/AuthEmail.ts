@@ -35,7 +35,7 @@ export class AuthEmail {
             text : 'UpTask - Reestablecer tu Password',
             html : `<p> Hola : ${user.email} , has solicitado reestablcer tu password  </p>
                 <p> Visita el siguiente enlace : </p>
-                <a href="${process.env.FRONTEND_URL}/auth/confirm-account">Reestablecer tu password</a>
+                <a href="${process.env.FRONTEND_URL}/auth/new-password">Reestablecer tu password</a>
                 <p>E ingresa el codigo : <b>${user.token}</b></p>
                 <p>Este token expira en 10 minutos</p>
             `

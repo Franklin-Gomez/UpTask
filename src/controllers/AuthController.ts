@@ -193,4 +193,27 @@ export class AuthController {
             res.status(400).json({error : 'Hubo un error' })
         }
     }
+
+    static validateToken = async ( req : Request , res : Response ) => { 
+        try {
+            
+            const { token } = req.body
+
+            // buscando en la db
+            const tokenExist = await Token.findOne( { token } )
+
+            // en caso que no exista token 
+            if( !tokenExist ) { 
+                const error = new Error('Token no valido')
+                return res.status(404).json({ error : error.message })
+            }
+
+            res.send('Token Valido , Define tu nueva Password ')
+
+        } catch (error) {
+
+            res.status(500).json({error : 'Hubo un error' })
+
+        }
+    }
 }
