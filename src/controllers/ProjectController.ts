@@ -44,10 +44,15 @@ export class ProjectController {
 
             const id = req.params.id
     
-            const data = await (await Project.findById( id )).populate('tasks')
+            const data = await Project.findById( id ).populate('tasks')
     
             if(!data){
                 const error = new Error('proyecto no encontrado')
+                return res.status(404).json( {error : error.message})
+            }
+
+            if( data.manager.toString() !== req.user.id.toString() ) { 
+                const error = new Error('Accion no valida')
                 return res.status(404).json( {error : error.message})
             }
     

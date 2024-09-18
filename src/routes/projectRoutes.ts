@@ -9,9 +9,9 @@ import { authenticate } from "../middleware/auth";
 
 const router = Router()
 
-router.post('/' ,
+router.use( authenticate )
 
-    authenticate,
+router.post('/' ,
     
     body('projectName')
         .notEmpty().withMessage('El Nombre del Proyecto es Obligatorio')
@@ -29,8 +29,6 @@ router.post('/' ,
 
 
 router.get('/' 
-    
-    , authenticate
     
 ,ProjectController.getAllProjects )  
 
