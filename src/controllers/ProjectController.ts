@@ -7,6 +7,9 @@ export class ProjectController {
         
         const data = new Project(req.body)
 
+        // Asignar un manager
+        data.manager = req.user.id
+
         try {
             
             await data.save() // Project.create(req.body)

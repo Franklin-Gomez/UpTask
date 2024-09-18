@@ -1,5 +1,6 @@
 import mongoose , { Schema , Document, PopulatedDoc , Types} from "mongoose";
 import { TaskType } from "./Tarea";
+import { IUser } from "./User";
 
 // esto es typeScript
 export type ProjectType = Document & { // Heredar todo el typado de document 
@@ -7,6 +8,7 @@ export type ProjectType = Document & { // Heredar todo el typado de document
     clientName : string
     description : string
     tasks : PopulatedDoc<TaskType & Document>[] //<--nos traemos la informacion de la tarea
+    manager : PopulatedDoc<IUser & Document> // <-- quien creo el proyecto
 }
 
 // esto es de mongoose
@@ -32,7 +34,12 @@ const ProjectSchema : Schema = new Schema ({
             type : Types.ObjectId,
             ref : 'Task'
         }
-    ]
+    ],
+    manager : {
+        type : Types.ObjectId,
+        ref : 'User'
+    },
+
 }, { timestamps : true} )
 
 //añádiendo del modelo a mongose
