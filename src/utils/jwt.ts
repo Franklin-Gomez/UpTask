@@ -11,7 +11,7 @@ export const generateJWT = (  payload : userPayload ) => {
     // argumentos -> expiresIn uno de tantos pero es muy importante
 
     const token = jwt.sign( payload , process.env.JWT_SECRET , { 
-        expiresIn : '6min'
+        expiresIn : '180d'
     })
 
     return token
