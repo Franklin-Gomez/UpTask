@@ -23,7 +23,12 @@ export class ProjectController {
     static getAllProjects = async ( req : Request , res : Response) => { 
         try {
 
-            const data =  await Project.find({})
+            const data =  await Project.find({
+                //filtrar por cierta condicion
+                $or : [
+                    { manager : { $in : req.user.id }}
+                ]
+            })
             
             res.json( data)
 
