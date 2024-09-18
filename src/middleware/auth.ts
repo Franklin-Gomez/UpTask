@@ -1,6 +1,15 @@
 import { Request , Response  , NextFunction } from "express"
 import jwt  from "jsonwebtoken"
-import User from "../models/User"
+import User, { IUser } from "../models/User"
+
+// escribir en el req una nueva propiedad
+declare global { 
+    namespace Express { 
+        interface Request { 
+            user? : IUser
+        }
+    }
+}
 
 export const authenticate = async ( req : Request , res : Response  ,next : NextFunction) => { 
 
@@ -25,9 +34,13 @@ export const authenticate = async ( req : Request , res : Response  ,next : Next
         // verificamos que el usuario exista
         if( typeof decode == 'object' && decode.id ){
 
-            const user = await User.findById(decode.id)
+            const user = await User.findById(decode.id).select('_id name email')
 
-            console.log( user )
+            if( user ) {
+                req.user = user
+            } else { 
+                res.status(500).json({ error : 'Token No Valido '})
+            }
 
         }
 
