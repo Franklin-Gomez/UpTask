@@ -9,6 +9,7 @@ export type ProjectType = Document & { // Heredar todo el typado de document
     description : string
     tasks : PopulatedDoc<TaskType & Document>[] //<--nos traemos la informacion de la tarea
     manager : PopulatedDoc<IUser & Document> // <-- quien creo el proyecto
+    team: PopulatedDoc<IUser & Document>[] // equipo asignado al proyecto
 }
 
 // esto es de mongoose
@@ -32,13 +33,19 @@ const ProjectSchema : Schema = new Schema ({
     tasks : [
         {
             type : Types.ObjectId,
-            ref : 'Task'
+            ref : 'Task' // referencia - datos
         }
     ],
     manager : {
         type : Types.ObjectId,
-        ref : 'User'
+        ref : 'User' // referencia - datos 
     },
+    team : [
+        {
+            type : Types.ObjectId,
+            ref : 'User' // referencia - datos 
+        }
+    ]
 
 }, { timestamps : true} )
 
