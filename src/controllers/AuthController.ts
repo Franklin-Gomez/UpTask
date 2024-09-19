@@ -249,4 +249,8 @@ export class AuthController {
 
         }
     }
+
+    static user = async ( req : Request , res : Response ) => { 
+        return res.json( req.user )
+    }
 }
