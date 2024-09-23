@@ -58,16 +58,16 @@ export class TeamMemberController {
 
     static removeMemberById =  async ( req : Request , res : Response) => { 
 
-        const { id } = req.body
+        const { userId } = req.params
 
         // si ya esta eliminad
-        if( ! req.project.team.some( team => team.toString() == id  )) { 
+        if( ! req.project.team.some( team => team.toString() == userId  )) { 
             const error = new Error('Usuario ya esta eliminado al proyecto')
             return res.status(409).json({ error : error.message }) 
         }
-
+ 
         // eliminando al usuario
-        req.project.team = req.project.team.filter( member => member.toString() !== id )
+        req.project.team = req.project.team.filter( member => member.toString() !== userId )
 
         await req.project.save()
 
