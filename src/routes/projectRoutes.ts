@@ -4,7 +4,7 @@ import { body , param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskControllers } from "../controllers/TaskController";
 import { ProjectExists } from "../middleware/project";
-import { taskBelongsToProject, taskExists } from "../middleware/task";
+import { hasAuthorization, taskBelongsToProject, taskExists } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
 
@@ -83,6 +83,8 @@ router.param('taskId' , taskBelongsToProject)
 
 router.post('/:projectId/tasks',
 
+    hasAuthorization,
+
     body('name')
         .notEmpty().withMessage('El Nombre de la tarea es Obligatorio')
     ,
@@ -108,6 +110,8 @@ router.get('/:projectId/tasks/:taskId',
 TaskControllers.getTaskById)
 
 router.put('/:projectId/tasks/:taskId',
+
+    hasAuthorization,
  
     param('taskId')
         .isMongoId().withMessage('id no valido')
@@ -126,6 +130,8 @@ router.put('/:projectId/tasks/:taskId',
 TaskControllers.updateTask)
 
 router.delete('/:projectId/tasks/:taskId',
+
+    hasAuthorization,
  
     param('taskId')
         .isMongoId().withMessage('id no valido')

@@ -45,3 +45,15 @@ export const taskBelongsToProject = ( req : Request , res : Response , next : Ne
     next()
 
 }
+
+export const hasAuthorization = ( req : Request , res : Response , next : NextFunction ) => { 
+
+    // si el usuario que esta realizando estas acciones no es el manager
+    if( req.user.id.toString() !== req.project.manager.toString()) { 
+        const error = new Error('La tarea no pertenece a este proyecto')
+        return res.status(400).json({ error : error.message})
+    }
+
+    next()
+
+}
