@@ -26,7 +26,8 @@ export class ProjectController {
             const data =  await Project.find({
                 //filtrar por cierta condicion
                 $or : [
-                    { manager : { $in : req.user.id }}
+                    { manager : { $in : req.user.id }},
+                    { team : { $in : req.user.id }}
                 ]
             })
             
@@ -51,7 +52,7 @@ export class ProjectController {
                 return res.status(404).json( {error : error.message})
             }
 
-            if( data.manager.toString() !== req.user.id.toString() ) { 
+            if( data.manager.toString() !== req.user.id.toString() && !data.team.includes(req.user.id) ) { 
                 const error = new Error('Accion no valida')
                 return res.status(404).json( {error : error.message})
             }
