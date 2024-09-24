@@ -17,6 +17,7 @@ export type TaskType = Document & {
     description : string
     project: Types.ObjectId //<-- type  para la tarea relacionada
     status : TaskStatus
+    completedBy : Types.ObjectId
 }
 
 export const TaskSchema : Schema = new Schema ({
@@ -41,6 +42,12 @@ export const TaskSchema : Schema = new Schema ({
         type : String,
         enum : Object.values( taskStatus ),
         default : taskStatus.PENDING
+    },
+
+    completedBy : { 
+        type : Types.ObjectId, // id del usuario
+        ref : 'User',
+        default : null
     }
 
 }, {timestamps : true })
