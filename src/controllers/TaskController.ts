@@ -46,8 +46,11 @@ export class TaskControllers {
             //     const error = new Error('Accio no valida')
             //     return res.status(400).json({ error : error.message})
             // }
+
+            const task = await Task.findById(req.task.id)
+                        .populate({ path : 'completedBy' , select : 'id name email'})
             
-            res.json(req.task)
+            res.json(task)
 
         } catch (error) {
 
