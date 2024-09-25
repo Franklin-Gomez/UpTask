@@ -105,15 +105,13 @@ export class TaskControllers {
             
             req.task.status = status
 
-            if( status === 'pending') { 
-                
-                req.task.completedBy = null    
-            
-            } else { 
-                
-                req.task.completedBy = req.user.id
-
+            // historial de cambios
+            const data = { 
+                user: req.user.id,
+                status
             }
+
+            req.task.completedBy.push( data)
             
             await req.task.save()
 
