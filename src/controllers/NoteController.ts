@@ -1,5 +1,11 @@
 import type { Request , Response } from 'express'
 import Note , { INote } from '../models/Note'
+import { Types } from 'mongoose'
+import { promises } from 'nodemailer/lib/xoauth2'
+
+type NoteParams = { 
+    noteId : Types.ObjectId
+}
 
 export class NoteController { 
 
@@ -37,6 +43,38 @@ export class NoteController {
             res.status(500).json({ error : 'Hubo un error'})
 
         }
+    }
+
+    static deleteTaskNotes = async ( req : Request<NoteParams>  , res : Response ) => { 
+        
+        const { noteId } =  req.params
+
+        const note = await Note.findById( noteId )
+
+        // si no existe la nota
+        if(!note) { 
+            const error = new Error('Nota no encontrada')
+            res.status(404).json({ error : error.message })
+        }
+
+        // si la persona no esta autenticada
+        if( note.createdBy.toString() !== req.user.id.toString() ){
+            const error = new Error('Accion no valida')
+            return res.status(401).json({ error : error.message})
+        }
+
+        // filtramos las notas de las tareas
+        req.task.notes = req.task.notes.filter(( nota ) => nota.toString() !== noteId.toString())
+
+        try {
+
+            await Promise.allSettled([ req.task.save() , note.deleteOne()])
+            res.send('Nota Eliminado')
+            
+        } catch (error) {
+            res.status(500).json({ error : 'Hubo un error '})
+        }
+
     }
 
 }
