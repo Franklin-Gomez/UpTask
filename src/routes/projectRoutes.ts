@@ -190,7 +190,7 @@ router.delete('/:projectId/team/:userId',
 TeamMemberController.removeMemberById)
 
 /** Routes for Notes **/
-router.post('/:projectId/tasks/:tasks/notes' , 
+router.post('/:projectId/tasks/:taskId/notes' , 
     
     body('content')
         .notEmpty().withMessage('La nota no puede ir vacio')
@@ -199,5 +199,7 @@ router.post('/:projectId/tasks/:tasks/notes' ,
     handleInputErrors,
 
 NoteController.createNote)
+
+router.get('/:projectId/tasks/:taskId/notes' , NoteController.getTaskNotes)
 
 export default router
