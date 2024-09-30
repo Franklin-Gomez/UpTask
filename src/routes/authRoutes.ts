@@ -125,7 +125,7 @@ router.post('/update-password' ,
     authenticate,
 
     body('current_password')
-        .notEmpty().withMessage('El Nombre no puede ir Vacio'),
+        .notEmpty().withMessage('El Password no puede ir Vacio'),
 
     body('password')
         .isLength({min : 8}).withMessage('El password es muy corto , debe ser mayor a 8  caracteres'),
@@ -143,6 +143,17 @@ router.post('/update-password' ,
     handleInputErrors,
 
 AuthController.updateCurrentUserPassword)
+
+
+router.post('/check-password' , 
+    authenticate,
+
+    body('password')
+        .notEmpty().withMessage('El password no puede ir vacio'),
+
+    handleInputErrors,
+
+AuthController.checkPassword)
 
  
 export default router
