@@ -1,6 +1,7 @@
 import mongoose , { Schema , Document, PopulatedDoc , Types} from "mongoose";
-import { TaskType } from "./Tarea";
+import Task, { TaskType } from "./Tarea";
 import { IUser } from "./User";
+import Note from "./Note";
 
 // esto es typeScript
 export type ProjectType = Document & { // Heredar todo el typado de document 
@@ -48,6 +49,23 @@ const ProjectSchema : Schema = new Schema ({
     ]
 
 }, { timestamps : true} )
+
+// Middleware
+// se activa antes o despues de ejecutar el 'deleteOne'
+ProjectSchema.pre('deleteOne' , { document : true } , async function () { 
+    
+    const ProjectId = this._id 
+    if(!ProjectId) return 
+
+    // todas las tareas que pertenescan a este proyecto
+    const tasks = await Task.find({ project : ProjectId })
+    for( const task of tasks ) { 
+        await Note.deleteMany({ task :  task.id })
+    }
+
+
+    await Task.deleteMany( { project : ProjectId })
+})
 
 //añádiendo del modelo a mongose
 const Project = mongoose.model<ProjectType>('Project' , ProjectSchema)
