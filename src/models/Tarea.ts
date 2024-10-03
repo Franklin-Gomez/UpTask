@@ -75,5 +75,17 @@ export const TaskSchema : Schema = new Schema ({
 
 }, {timestamps : true })
 
+// Middleware
+// se activa antes o despues de ejecutar el 'deleteOne'
+TaskSchema.pre('deleteOne' , { document : true } , async function () { 
+    // nos muestra el objeto eliminando , el valor de this cambia dependiendo si  document , query  es true o false 
+    // console.log( this._id  ) // id de la tarea eliminada
+
+    const taskId = this._id // capturamos el id de la tarea eliminada 
+    if(!taskId) return 
+    await Note.deleteMany( { task : taskId }) // eliminamos la nota que tenga de referencia esta tarea
+    
+})
+
 const Task = mongoose.model<TaskType>('Task' , TaskSchema)
 export default Task
