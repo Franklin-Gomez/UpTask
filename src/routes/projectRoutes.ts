@@ -34,6 +34,9 @@ router.get('/'
     
 ,ProjectController.getAllProjects )  
 
+// valida el proyecto en cada url que encuentre projectId
+router.param('projectId' , ProjectExists)
+
 router.get('/:id' ,
     
     param('id')
@@ -44,9 +47,9 @@ router.get('/:id' ,
 
 , ProjectController.getOneProjects ) 
 
-router.put('/:id' ,
+router.put('/:projectId' ,
     
-    param('id')
+    param('projectId')
         .isMongoId().withMessage('id no valido')
     ,
 
@@ -61,15 +64,21 @@ router.put('/:id' ,
     body('description')
         .notEmpty().withMessage('la descripcion del Proyecto es Obligatorio')
     ,
+    
+    handleInputErrors,
 
-    handleInputErrors
+    hasAuthorization
 
 , ProjectController.updateProject ) 
 
-router.delete('/:id', 
+router.delete('/:projectId', 
 
-    param('id')
-    .isMongoId().withMessage('id no valido')
+    param('projectId')
+    .isMongoId().withMessage('id no valido'),
+
+    handleInputErrors,
+
+    hasAuthorization
 
 , ProjectController.deleteProject )
 

@@ -71,25 +71,25 @@ export class ProjectController {
         
         try {
             
-            const id = req.params.id
+            // const id = req.params.id
 
-            const data =  await Project.findById( id )
+            // const data =  await Project.findById( id )
 
-            if(!data) { 
-                const error = new Error('proyecto no encontrado')
-                return res.status(404).json({ error : error.message})
-            }
+            // if(!data) { 
+            //     const error = new Error('proyecto no encontrado')
+            //     return res.status(404).json({ error : error.message})
+            // }
 
-            if( data.manager.toString() !== req.user.id.toString() ) { 
-                const error = new Error('Solo el Manager puede Actualizar el proyecto')
-                return res.status(404).json( {error : error.message})
-            }
+            // if( data.manager.toString() !== req.user.id.toString() ) { 
+            //     const error = new Error('Solo el Manager puede Actualizar el proyecto')
+            //     return res.status(404).json( {error : error.message})
+            // }
 
-            data.clientName = req.body.clientName
-            data.projectName = req.body.projectName
-            data.description = req.body.description
+            req.project.clientName = req.body.clientName
+            req.project.projectName = req.body.projectName
+            req.project.description = req.body.description
 
-            await data.save()
+            await req.project.save()
 
 
             //devolvemos al front
@@ -107,25 +107,25 @@ export class ProjectController {
 
         try {
             
-            const id  = req.params.id
+            // const id  = req.params.id
 
-            const data = await Project.findById(id)
+            // const data = await Project.findById(id)
             
-            if(!data) { 
-                const error = new Error('proyecto no encontrado')
-                return res.status(404).json({ error : error.message})
-            }
+            // if(!data) { 
+            //     const error = new Error('proyecto no encontrado')
+            //     return res.status(404).json({ error : error.message})
+            // }
 
-            if( data.manager.toString() !== req.user.id.toString() ) { 
-                const error = new Error('Solo el Manager puede eliminar un Proyecto')
-                return res.status(404).json( {error : error.message})
-            }
+            // if( data.manager.toString() !== req.user.id.toString() ) { 
+            //     const error = new Error('Solo el Manager puede eliminar un Proyecto')
+            //     return res.status(404).json( {error : error.message})
+            // }
 
             /*
                 COMPROBACIOENS ADICIONALES DE PERMISOS DEL USUARIO
             */
 
-            await data.deleteOne()
+            await req.project.deleteOne()
 
             res.send('Proyect eliminado')
 
