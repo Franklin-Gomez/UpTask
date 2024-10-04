@@ -59,6 +59,8 @@ ProjectSchema.pre('deleteOne' , { document : true } , async function () {
 
     // todas las tareas que pertenescan a este proyecto
     const tasks = await Task.find({ project : ProjectId })
+
+    //recorremos eliminamos las notas de esta tarea
     for( const task of tasks ) { 
         await Note.deleteMany({ task :  task.id })
     }
