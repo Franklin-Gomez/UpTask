@@ -1,9 +1,10 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
+import { ProjectControllers } from "../controllers/ProjectControllers";
 
 const router = Router()
 
-router.get('/' , ( req : Request , res : Response) => { 
-    res.send('hello')
-})
+router.get('/' , ProjectControllers.getAllProject )
+
+router.post('/' , ProjectControllers.createProject )
 
 export default router
