@@ -5,6 +5,7 @@
     "lib": [
         "esnext"
     ],
+    
     "target": "ESNext",
     "moduleResolution": "NodeNext",
     "module": "NodeNext",

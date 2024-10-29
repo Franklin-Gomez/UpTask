@@ -1,11 +1,6 @@
 import express  from 'express'
+import router from './routes/ProjectRoutes'
 
-const server = express()
+export const app = express()
 
-server.listen( 4000, () => { 
-    console.log('desde puerto 4000')
-})
-
-server.get('/' , ( req , res ) => { 
-    res.send('hola mundo')
-})
+app.use('/api/projects' , router )
