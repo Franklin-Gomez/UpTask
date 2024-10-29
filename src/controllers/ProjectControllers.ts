@@ -10,4 +10,13 @@ export class ProjectControllers {
     public static createProject( req : Request, res : Response) { 
         res.send('desde crear Project')
     }
+
+        
+    public static updateProject( req : Request, res : Response) { 
+        res.send('desde editar Project')
+    }
+
+    public static deleteProject ( req : Request , res : Response ){
+        res.send('desde delete Project')
+    }
 }
