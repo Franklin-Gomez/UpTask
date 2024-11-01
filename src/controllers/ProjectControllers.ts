@@ -1,20 +1,92 @@
 import { Request , Response } from "express"
+import { ProjectModel } from "../models/ProjectModels"
 
 export class ProjectControllers {
 
-    public static createProject( req : Request, res : Response) { 
-        console.log( req.body)
+    public static async createProject( req : Request, res : Response) { 
+
+        try {
+
+            const project =  new ProjectModel( req.body)
+
+            await project.save()
+
+            res.send('projecto creado correctamente')
+            
+        } catch (error) {
+            
+            res.send('error al crear el projecto')
+        }
+
     }
 
-    public static getAllProject( req : Request, res : Response) { 
-        res.send('desde get all project')
+    public static async getAllProject( req : Request, res : Response) { 
+
+        try {
+            
+            const projects = await ProjectModel.find()
+
+            res.json(projects)
+
+        } catch (error) {
+
+            console.log( error )
+
+        }
+
     }
 
-    public static updateProject( req : Request, res : Response) { 
-        res.send('desde editar Project')
+    public static async getOneProject( req : Request, res : Response) { 
+
+        const id = req.params.id 
+
+        try {
+            
+            const project = await ProjectModel.findById( id )
+
+            res.json( project )
+
+        } catch (error) {
+
+            console.log( error )
+
+        }
+
     }
 
-    public static deleteProject ( req : Request , res : Response ){
-        res.send('desde delete Project')
+    public static async updateProject( req : Request, res : Response) { 
+
+        const id = req.params.id 
+
+        const newData = req.body
+
+        try {
+            
+            const project = await ProjectModel.findByIdAndUpdate( id , newData )
+
+            res.json( project )
+
+        } catch (error) {
+
+            console.log( error )
+
+        }
+    }
+
+    public static async deleteProject ( req : Request , res : Response ){
+
+        const id = req.params.id
+
+        try {
+            
+            await ProjectModel.findByIdAndDelete( id )
+
+            res.send( 'Eliminado Correctamente')
+
+        } catch (error) {
+
+            console.log( error )
+
+        }
     }
 }

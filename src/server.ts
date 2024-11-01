@@ -12,5 +12,8 @@ dotenv.config()
 // conexion a la base de datos
 conectDB()
 
+// leer datos de json
+app.use(express.json());
+
 // rutas permitidas
 app.use('/api/projects' , router )
