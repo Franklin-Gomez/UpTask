@@ -4,8 +4,11 @@ import { ProjectModel } from "../models/ProjectModels"
 export class ProjectControllers {
 
     public static async createProject( req : Request, res : Response) { 
+        
+        console.log( req.body )
 
         try {
+
 
             const project =  new ProjectModel( req.body)
 
