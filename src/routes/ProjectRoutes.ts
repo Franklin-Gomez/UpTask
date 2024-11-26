@@ -29,6 +29,8 @@ router.post('/:projectId/task'  , TaskControllers.createTask )
 
 router.get('/:projectId/task/:taskId'  , TaskControllers.getOneTask )
 
+router.get('/:projectId/task/'  , TaskControllers.getProjectTask )
+
 router.put('/:projectId/task/:taskId' , TaskControllers.updateTask )
 
 router.delete('/:projectId/task/:taskId' , TaskControllers.deleteTask )

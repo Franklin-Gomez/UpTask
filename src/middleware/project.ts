@@ -12,8 +12,6 @@ declare global {
 export const  projectExist = async ( req : Request , res : Response , next : NextFunction) => { 
     try {
 
-        console.log( req.params )
-
         const projectId = req.params.projectId
 
         const project = await ProjectModel.findById( projectId )

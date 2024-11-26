@@ -1,6 +1,5 @@
 import { Request , Response } from "express"
 import { ProjectModel } from "../models/ProjectModels"
-import { projectType } from "../models/ProjectModels"
 
 export class ProjectControllers {
 
