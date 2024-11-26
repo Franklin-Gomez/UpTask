@@ -1,14 +1,12 @@
 import { Request , Response } from "express"
 import { ProjectModel } from "../models/ProjectModels"
+import { projectType } from "../models/ProjectModels"
 
 export class ProjectControllers {
 
     public static async createProject( req : Request, res : Response) { 
-        
-        console.log( req.body )
 
         try {
-
 
             const project =  new ProjectModel( req.body)
 
@@ -41,7 +39,7 @@ export class ProjectControllers {
 
     public static async getOneProject( req : Request, res : Response) { 
 
-        const id = req.params.id 
+        const id = req.params.projectId
 
         try {
             
@@ -59,7 +57,7 @@ export class ProjectControllers {
 
     public static async updateProject( req : Request, res : Response) { 
 
-        const id = req.params.id 
+        const id = req.params.projectId
 
         const newData = req.body
 
@@ -78,7 +76,7 @@ export class ProjectControllers {
 
     public static async deleteProject ( req : Request , res : Response ){
 
-        const id = req.params.id
+        const id = req.params.projectId
 
         try {
             

@@ -13,11 +13,12 @@ conectDB()
 // iniciar el servidor
 export const app = express()
 
+// permitir peticiones
+app.use( cors() )
+
 // leer datos de json
 app.use(express.json());
 
-// permitir peticiones
-app.use( cors() )
 
 // rutas permitidas
 app.use('/api/projects' , router )

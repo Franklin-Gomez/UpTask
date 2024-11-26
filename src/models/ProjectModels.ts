@@ -1,9 +1,11 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, PopulatedDoc, PopulateOption, Types } from "mongoose";
+import { TaskType } from "./TaskModels";
 
 export type projectType = Document & { 
     projectName : string
     clientName : string
     description : string
+    tasks : PopulatedDoc<TaskType & Document>[]
 }
 
 const projectSchema = new mongoose.Schema({
@@ -25,7 +27,15 @@ const projectSchema = new mongoose.Schema({
         type : String,
         required : true,
         trim : true
-    }
+    },
+
+    tasks :  [
+        {
+            type : Types.ObjectId,
+            ref : 'Task'
+        }
+    ]
+    
 
 })
 

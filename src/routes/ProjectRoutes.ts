@@ -1,16 +1,37 @@
 import { Router } from "express";
 import { ProjectControllers } from "../controllers/ProjectControllers";
+import { TaskControllers } from "../controllers/TaskControllers";
+import { projectExist } from "../middleware/project";
 
 const router = Router()
+
+
+/** Project Routes **/
 
 router.post('/' , ProjectControllers.createProject )
 
 router.get('/' , ProjectControllers.getAllProject )
 
-router.get('/:id' , ProjectControllers.getOneProject )
+router.get('/:projectId' , ProjectControllers.getOneProject )
 
-router.put('/:id' , ProjectControllers.updateProject )
+router.put('/:projectId' , ProjectControllers.updateProject )
 
-router.delete('/:id' , ProjectControllers.deleteProject )
+router.delete('/:projectId' , ProjectControllers.deleteProject )
+
+
+// verificamos que el proyecto exista de forma global
+router.param('projectId', projectExist)
+
+
+/** Task Routes **/
+
+router.post('/:projectId/task'  , TaskControllers.createTask )
+
+router.get('/:projectId/task/:taskId'  , TaskControllers.getOneTask )
+
+router.put('/:projectId/task/:taskId' , TaskControllers.updateTask )
+
+router.delete('/:projectId/task/:taskId' , TaskControllers.deleteTask )
+
 
 export default router
