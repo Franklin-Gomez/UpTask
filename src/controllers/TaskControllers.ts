@@ -38,7 +38,7 @@ export class TaskControllers {
 
     }
 
-    public static getProjectTask = async ( req : Request , res : Response) => { 
+    public static getAllTask = async ( req : Request , res : Response) => { 
 
         try {
 
@@ -73,12 +73,6 @@ export class TaskControllers {
                     res.send('ID de tarea no valido')
                     return
                 }
-
-                // req.project.tasks = 
-        
-                // //const task = await TaskModel.findById( taskId )
-
-                // res.json( task )
 
             } 
             

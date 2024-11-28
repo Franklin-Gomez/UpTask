@@ -42,7 +42,7 @@ export class ProjectControllers {
 
         try {
             
-            const project = await ProjectModel.findById( id )
+            const project = await ProjectModel.findById( id ).populate('tasks')
 
             res.json( project )
 

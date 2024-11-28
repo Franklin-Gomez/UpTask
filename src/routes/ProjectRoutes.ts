@@ -29,7 +29,7 @@ router.post('/:projectId/task'  , TaskControllers.createTask )
 
 router.get('/:projectId/task/:taskId'  , TaskControllers.getOneTask )
 
-router.get('/:projectId/task/'  , TaskControllers.getProjectTask )
+router.get('/:projectId/task'  , TaskControllers.getAllTask )
 
 router.put('/:projectId/task/:taskId' , TaskControllers.updateTask )
 
