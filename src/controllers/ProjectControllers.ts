@@ -24,7 +24,7 @@ export class ProjectControllers {
 
         try {
             
-            const projects = await ProjectModel.find()
+            const projects = await ProjectModel.find().populate("tasks")
 
             res.json(projects)
 
