@@ -70,10 +70,13 @@ export class TaskControllers {
                 const taskId = req.params.taskId
 
                 if( !taskId ) { 
-                    res.send('ID de tarea no valido')
-                    return
+                    const error = new Error('Tarea no Encontrada')
+                    res.status(400).json({ error : error.message })
                 }
 
+                const task = await TaskModel.findById( taskId )
+                res.status(200).json(task)
+            
             } 
             
         } catch (error) {
@@ -85,7 +88,32 @@ export class TaskControllers {
     }
 
     public static updateTask = async ( req : Request ,  res : Response) => { 
-    
+        try {
+
+            const projectId = req.params.projectId
+
+            const project = await ProjectModel.findById( projectId )
+
+            if( project ) { 
+                
+                const taskId = req.params.taskId
+
+                if( !taskId ) { 
+                    const error = new Error('Tarea no Encontrada')
+                    res.status(400).json({ error : error.message })
+                }
+
+                const task = await TaskModel.findByIdAndUpdate( taskId , req.body )
+
+                res.status(200).json(task)
+            
+            } 
+            
+        } catch (error) {
+
+            res.status(404).send({ error : error.message})
+
+        }
     } 
 
     public static deleteTask = async ( req : Request ,  res : Response) => { 
