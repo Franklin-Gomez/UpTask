@@ -153,7 +153,7 @@ export class TaskControllers {
         
         try {
             
-            const status  = req.body
+            const status  = req.body.status
 
             req.task.status = status
 
