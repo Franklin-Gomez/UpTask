@@ -3,6 +3,7 @@ import { ProjectControllers } from "../controllers/ProjectControllers";
 import { TaskControllers } from "../controllers/TaskControllers";
 import { projectExist } from "../middleware/project";
 import { taskExist } from "../middleware/task";
+import { NoteControllers } from "../controllers/NoteControllers";
 
 const router = Router()
 
@@ -22,9 +23,7 @@ router.put('/:projectId' , ProjectControllers.updateProject )
 router.delete('/:projectId' , ProjectControllers.deleteProject )
 
 
-
-
-// verificamos que la tarea exista
+// verificamos que la tarea exista  de forma global
 router.param('taskId' , taskExist)
 
 /** Task Routes **/
@@ -40,6 +39,14 @@ router.put('/:projectId/task/:taskId' , TaskControllers.updateTask )
 router.delete('/:projectId/task/:taskId' , TaskControllers.deleteTask )
 
 router.post('/:projectId/task/:taskId/status' , TaskControllers.updateStatusTask )
+
+
+
+/**  Note Routes **/
+
+router.post('/:projectId/task/:taskId/notes' , NoteControllers.createNote)
+
+router.delete('/:projectId/task/:taskId/notes/:noteId' , NoteControllers.deleteNote )
 
 
 export default router

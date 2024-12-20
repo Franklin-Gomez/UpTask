@@ -74,7 +74,8 @@ export class TaskControllers {
                     res.status(400).json({ error : error.message })
                 }
 
-                const task = await TaskModel.findById( taskId )
+                const task = await TaskModel.findById( taskId ).populate('notes')
+
                 res.status(200).json(task)
             
             } 

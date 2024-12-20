@@ -1,4 +1,5 @@
 import mongoose, { Document , Types } from "mongoose";
+import { NoteModel } from "./NoteModels";
 
 // diccionario
 const taskStatus = {
@@ -17,6 +18,7 @@ export type TaskType = Document & {
     projectId : Types.ObjectId
     name : string
     status : TaskStatus
+    notes : Types.ObjectId[]
 }
 
 const TaskSchema = new mongoose.Schema({
@@ -42,7 +44,14 @@ const TaskSchema = new mongoose.Schema({
         type : String,
         enum : Object.values(taskStatus), // pasarle los valores, que solo estos aceptara
         default : 'pending'
-    }
+    },
+
+    notes : [
+        {
+            type : Types.ObjectId,
+            ref : 'Note'
+        }
+    ]
 
 } , {timestamps : true })
 
