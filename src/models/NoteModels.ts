@@ -7,7 +7,7 @@ export type noteSchemaType = Document & {
     task : Types.ObjectId
 }
 
-const noteSchema   = new mongoose.Schema({
+const noteSchema  = new mongoose.Schema({
 
     content : {
         type : String ,
@@ -27,4 +27,4 @@ const noteSchema   = new mongoose.Schema({
 
 }, { timestamps : true } )
 
-export const NoteModel = mongoose.model('Note' , noteSchema)
+export const NoteModel = mongoose.model<noteSchemaType>('Note' , noteSchema)

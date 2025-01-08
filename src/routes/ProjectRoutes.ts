@@ -4,6 +4,7 @@ import { TaskControllers } from "../controllers/TaskControllers";
 import { projectExist } from "../middleware/project";
 import { taskExist } from "../middleware/task";
 import { NoteControllers } from "../controllers/NoteControllers";
+import { AuthControllers } from "../controllers/AuthControllers";
 
 const router = Router()
 
