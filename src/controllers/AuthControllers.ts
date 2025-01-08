@@ -1,6 +1,6 @@
 import { Request , Response } from "express"
 import { UserModel } from "../models/UserModels"
-import { hasPassword } from "../utils/auth"
+import { checkPassword, hasPassword } from "../utils/auth"
 import { tokenModels } from "../models/TokenModels"
 import { generateToken } from "../utils/token"
 import { AuthEmail } from "../email/AuthEmail"
@@ -45,8 +45,85 @@ export class AuthControllers {
         }
     }
 
-    public static async getUser () { 
-        console.log("el usuario es...mongondo")
+    public static async confirmAccount( req : Request , res : Response ) { 
+
+        try {
+
+            const { token } = req.body
+        
+            const tokenExists = await tokenModels.findOne( { token : token } )
+    
+            if( !tokenExists ) { 
+                const error = new Error("Token no valido")
+                res.status(401).json({ error : error.message })
+                return 
+            }
+            
+            const userExist = await UserModel.findById( tokenExists.user )
+            userExist.confirmed = true
+    
+            await Promise.allSettled( [ userExist.save() , tokenExists.deleteOne() ] )
+    
+            res.send('Cuenta Confirmada correctamente ')
+            
+        } catch (error) {
+
+            res.status(500).json({ error : 'Hubo un Error' })
+        
+        }
+
+    }
+
+    public static async login( req : Request , res : Response ) { 
+
+        try {
+
+            const { email , password } = req.body 
+
+            const userExist = await UserModel.findOne( { email : email } )
+    
+            if( !userExist ) { 
+                const error = new Error("Usuario no valido")
+                res.status(401).json({ error : error.message })
+                return
+            }
+
+            if( !userExist.confirmed ) { 
+
+                const token = new tokenModels()
+                token.token = generateToken()
+                token.user = userExist.id
+
+                await token.save()
+
+                AuthEmail.sendConfirmationEmail({
+                    email : userExist.email,
+                    name : userExist.name,
+                    token : token.token
+                })
+
+                const error = new Error("Usuario no Confirmado, Email de confirmacion enviado")
+                res.status(401).json({ error : error.message})
+                return
+
+            }
+
+            const confirmedPassword = checkPassword( password , userExist.password)
+
+            if(!confirmedPassword){
+                const error = new Error("Contraseña incorrecta")
+                res.status(401).json({ error : error.message})
+            }
+
+
+    
+            
+        } catch (error) {
+
+            res.status(500).json({ error : "Hubo un error"})
+
+        }
+
     }
 
 }

@@ -11,7 +11,6 @@ export class AuthEmail {
 
     static sendConfirmationEmail = async ( user : EmailType ) => { 
 
-
         const info = await transport.sendMail({
             
             from: 'UpTask <admin@uptask.com>',
@@ -25,8 +24,6 @@ export class AuthEmail {
                 <p>Este token expira en 10 minutos</p>
             `
         })
-
-        console.log('Mensaje enviado' , info.messageId)
 
     }
 }

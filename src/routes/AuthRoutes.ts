@@ -8,4 +8,8 @@ const router = Router()
 
 router.post('/' , AuthControllers.createUser )
 
+router.post('/confirm-account' , AuthControllers.confirmAccount )
+
+router.post('/login' , AuthControllers.login )
+
 export default router
