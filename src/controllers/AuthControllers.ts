@@ -115,8 +115,6 @@ export class AuthControllers {
                 res.status(401).json({ error : error.message})
             }
 
-
-    
             
         } catch (error) {
 
