@@ -7,7 +7,7 @@ import { AuthEmail } from "../email/AuthEmail"
 
 export class AuthControllers {
 
-    public static async createUser( req : Request , res : Response) {
+    static async createUser( req : Request , res : Response) {
 
         try {
 
@@ -45,7 +45,7 @@ export class AuthControllers {
         }
     }
 
-    public static async confirmAccount( req : Request , res : Response ) { 
+    static async confirmAccount( req : Request , res : Response ) { 
 
         try {
 
@@ -74,46 +74,47 @@ export class AuthControllers {
 
     }
 
-    public static async login( req : Request , res : Response ) { 
+    static async login( req: Request , res : Response ) : Promise<any> { 
 
         try {
 
             const { email , password } = req.body 
 
             const userExist = await UserModel.findOne( { email : email } )
-    
+
+
             if( !userExist ) { 
-                const error = new Error("Usuario no valido")
-                res.status(401).json({ error : error.message })
+
+                const error = new Error('Usuario no valido')
+                res.status(404).json({ error : error.message })   
                 return
             }
 
-            if( !userExist.confirmed ) { 
+            // if( !userExist.confirmed ) { 
 
-                const token = new tokenModels()
-                token.token = generateToken()
-                token.user = userExist.id
+            //     const token = new tokenModels()
+            //     token.token = generateToken()
+            //     token.user = userExist.id
 
-                await token.save()
+            //     await token.save()
 
-                AuthEmail.sendConfirmationEmail({
-                    email : userExist.email,
-                    name : userExist.name,
-                    token : token.token
-                })
+            //     AuthEmail.sendConfirmationEmail({
+            //         email : userExist.email,
+            //         name : userExist.name,
+            //         token : token.token
+            //     })
 
-                const error = new Error("Usuario no Confirmado, Email de confirmacion enviado")
-                res.status(401).json({ error : error.message})
-                return
+            //     const error = new Error("Usuario no Confirmado, Email de confirmacion enviado")
+            //     res.status(401).json({ error : error.message})
 
-            }
+            // }
 
-            const confirmedPassword = checkPassword( password , userExist.password)
+            // const confirmedPassword = checkPassword( password , userExist.password)
 
-            if(!confirmedPassword){
-                const error = new Error("Contraseña incorrecta")
-                res.status(401).json({ error : error.message})
-            }
+            // if(!confirmedPassword){
+            //     const error = new Error("Contraseña incorrecta")
+            //     res.status(401).json({ error : error.message})
+            // }
 
             
         } catch (error) {

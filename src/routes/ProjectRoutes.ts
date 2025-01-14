@@ -4,7 +4,8 @@ import { TaskControllers } from "../controllers/TaskControllers";
 import { projectExist } from "../middleware/project";
 import { taskExist } from "../middleware/task";
 import { NoteControllers } from "../controllers/NoteControllers";
-import { AuthControllers } from "../controllers/AuthControllers";
+import { handleInputErrors } from "../middleware/validation";
+import { body, param } from "express-validator";
 
 const router = Router()
 
@@ -13,11 +14,25 @@ router.param('projectId', projectExist)
 
 /** Project Routes **/
 
-router.post('/' , ProjectControllers.createProject )
+router.post('/' ,
+    
+    body("projectname")
+        .notEmpty().withMessage("El nombre del proyecto es Obligatorio"),
+        
+    handleInputErrors
+
+,ProjectControllers.createProject )
 
 router.get('/' , ProjectControllers.getAllProject )
 
-router.get('/:projectId' , ProjectControllers.getOneProject )
+router.get('/:projectId' , 
+
+    param('id')
+        .isMongoId().withMessage('id no valido'), 
+    
+    handleInputErrors,
+
+ProjectControllers.getOneProject )
 
 router.put('/:projectId' , ProjectControllers.updateProject )
 

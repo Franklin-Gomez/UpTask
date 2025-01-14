@@ -36,13 +36,19 @@ export class ProjectControllers {
 
     }
 
-    public static async getOneProject( req : Request, res : Response) { 
+    public static async getOneProject( req : Request , res : Response) { 
 
         const id = req.params.projectId
 
         try {
             
             const project = await ProjectModel.findById( id ).populate('tasks')
+
+            if(!project){
+                const error = new Error('proyecto no encontrado')
+                res.status(404).json( {error : error.message})
+                return;
+            }
 
             res.json( project )
 

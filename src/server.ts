@@ -23,7 +23,3 @@ app.use(express.json());
 // rutas permitidas
 app.use('/api/projects' , projectRoutes )
 app.use('/api/user' , authRoutes )
-
-app.get('/' , ( req , res) => { 
-    res.send( 'Servidor On')
-})
