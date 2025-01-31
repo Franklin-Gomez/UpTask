@@ -60,6 +60,13 @@ export class AuthControllers {
             }
             
             const userExist = await UserModel.findById( tokenExists.user )
+
+            if( !userExist ) { 
+                const error = new Error("Usuario no valido")
+                res.status(401).json({ error : error.message })
+                return 
+            }
+
             userExist.confirmed = true
     
             await Promise.allSettled( [ userExist.save() , tokenExists.deleteOne() ] )
@@ -90,31 +97,31 @@ export class AuthControllers {
                 return
             }
 
-            // if( !userExist.confirmed ) { 
+            if( !userExist.confirmed ) { 
 
-            //     const token = new tokenModels()
-            //     token.token = generateToken()
-            //     token.user = userExist.id
+                const token = new tokenModels()
+                token.token = generateToken()
+                token.user = userExist.id
 
-            //     await token.save()
+                await token.save()
 
-            //     AuthEmail.sendConfirmationEmail({
-            //         email : userExist.email,
-            //         name : userExist.name,
-            //         token : token.token
-            //     })
+                AuthEmail.sendConfirmationEmail({
+                    email : userExist.email,
+                    name : userExist.name,
+                    token : token.token
+                })
 
-            //     const error = new Error("Usuario no Confirmado, Email de confirmacion enviado")
-            //     res.status(401).json({ error : error.message})
+                const error = new Error("Usuario no Confirmado, Email de confirmacion enviado")
+                res.status(401).json({ error : error.message})
 
-            // }
+            }
 
-            // const confirmedPassword = checkPassword( password , userExist.password)
+            const confirmedPassword = checkPassword( password , userExist.password)
 
-            // if(!confirmedPassword){
-            //     const error = new Error("Contraseña incorrecta")
-            //     res.status(401).json({ error : error.message})
-            // }
+            if(!confirmedPassword){
+                const error = new Error("Contraseña incorrecta")
+                res.status(401).json({ error : error.message})
+            }
 
             
         } catch (error) {
@@ -124,5 +131,80 @@ export class AuthControllers {
         }
 
     }
+
+
+    static forgotPassword  = async ( req :  Request  , res : Response ) => { 
+
+        try {
+            
+            const { email } = req.body
+
+            const userExist = await UserModel.findOne({ email  : email })
+
+            if( !userExist ) { 
+                const error = new Error("Usuario no valido")
+                res.status(404).json({ error : error.message })
+            }
+            
+            const token = new tokenModels()
+            token.user = userExist.id
+            token.token = generateToken()
+
+            AuthEmail.sendPasswordResetToken({
+                email : email,
+                name : userExist.name,
+                token : token.token
+            })
+
+            await token.save()
+
+            res.status(200).send("Revisa tu Correo Electronico")
+
+        } catch (error) {
+
+            res.status(500).json({ error : "Hubo un error"})
+
+        }
+
+    }
+
+    static validateToken = async ( req : Request , res : Response ) => { 
+
+        try {
+
+            const { token }  = req.body
+
+            const tokenInfo = await tokenModels.findOne({ token : token })
+
+            if( !tokenInfo ) { 
+                const error = new Error("Token no valido")
+                res.status(404).json({ error : error })
+            }
+
+            res.send("Token valido , Define tu nueva Password")
+
+        } catch (error) {
+            
+            res.status(500).json({ error : "No se pudo Validar Token"})
+
+        }
+    }
+
+    static updatePasswordWithToken = async ( req : Request , res : Response ) => { 
+
+        try {
+
+            console.log( "desde update password" )
+            console.log( req.body )
+            
+        } catch (error) {
+            
+            res.status(500).json({ error : "Hubo un error"})
+
+        }
+
+    }
+
+
 
 }

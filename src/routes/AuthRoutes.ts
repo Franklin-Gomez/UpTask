@@ -12,4 +12,11 @@ router.post('/confirm-account' , AuthControllers.confirmAccount )
 
 router.post('/login' , AuthControllers.login )
 
+router.post('/forgot-password' , AuthControllers.forgotPassword )
+
+router.post('/validate-token' , AuthControllers.validateToken )
+
+router.post('/update-password/:token' , AuthControllers.updatePasswordWithToken )
+
+
 export default router
