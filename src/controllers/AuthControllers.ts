@@ -4,6 +4,8 @@ import { checkPassword, hasPassword } from "../utils/auth"
 import { tokenModels } from "../models/TokenModels"
 import { generateToken } from "../utils/token"
 import { AuthEmail } from "../email/AuthEmail"
+import { Model } from "mongoose"
+import { userExist } from "../middleware/auth"
 
 export class AuthControllers {
 
@@ -121,6 +123,7 @@ export class AuthControllers {
             if(!confirmedPassword){
                 const error = new Error("Contraseña incorrecta")
                 res.status(401).json({ error : error.message})
+                return
             }
 
             
@@ -144,6 +147,7 @@ export class AuthControllers {
             if( !userExist ) { 
                 const error = new Error("Usuario no valido")
                 res.status(404).json({ error : error.message })
+                return
             }
             
             const token = new tokenModels()
@@ -178,7 +182,8 @@ export class AuthControllers {
 
             if( !tokenInfo ) { 
                 const error = new Error("Token no valido")
-                res.status(404).json({ error : error })
+                res.status(404).json({ error : error.message })
+                return
             }
 
             res.send("Token valido , Define tu nueva Password")
@@ -194,8 +199,38 @@ export class AuthControllers {
 
         try {
 
-            console.log( "desde update password" )
-            console.log( req.body )
+            const { token } = req.params
+
+            const tokenExists = await tokenModels.findOne({ token : token })
+
+            if( !tokenExists ) {
+                const error = new Error("Token Expirado")
+                res.status(404).json({ error : error.message })
+                return
+            }
+
+            const userExist = await UserModel.findById( tokenExists.user )
+
+            if( !userExist ) { 
+                const error = new Error("Usuario no Encontrado")
+                res.status(404).json({ error : error.message })
+                return
+            }
+
+            const { password , password_confirmation } = req.body
+
+            if( password != password_confirmation ) { 
+                const error = new Error("Contraseñas no coinciden")
+                res.status(404).json({ error : error.message })
+                return
+            }
+
+            userExist.password = await hasPassword( password )
+
+            await userExist.save()
+            await tokenExists.deleteOne()
+
+            res.status(200).json("Contraseña creada Correctamente")
             
         } catch (error) {
             

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { AuthControllers } from "../controllers/AuthControllers";
-import { userExist } from "../middleware/auth";
+import { handleInputErrors } from "../middleware/validation";
+import { body } from "express-validator";
 
 const router = Router()
 
@@ -14,7 +15,14 @@ router.post('/login' , AuthControllers.login )
 
 router.post('/forgot-password' , AuthControllers.forgotPassword )
 
-router.post('/validate-token' , AuthControllers.validateToken )
+router.post('/validate-token' ,
+    
+    body('token')
+        .notEmpty().withMessage('El Token no puede ir Vacio'),
+    
+    handleInputErrors,
+
+AuthControllers.validateToken )
 
 router.post('/update-password/:token' , AuthControllers.updatePasswordWithToken )
 
