@@ -5,7 +5,7 @@ import { tokenModels } from "../models/TokenModels"
 import { generateToken } from "../utils/token"
 import { AuthEmail } from "../email/AuthEmail"
 import { Model } from "mongoose"
-import { userExist } from "../middleware/auth"
+import { generateJWT } from "../utils/jwt"
 
 export class AuthControllers {
 
@@ -125,6 +125,10 @@ export class AuthControllers {
                 res.status(401).json({ error : error.message})
                 return
             }
+            
+            const token = generateJWT({ id : userExist.id })
+            
+            res.send( token )
 
             
         } catch (error) {

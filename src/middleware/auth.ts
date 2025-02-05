@@ -1,20 +1,56 @@
-import { NextFunction } from "express"
+import { NextFunction , Request , Response } from "express"
 import { UserModel, UserType } from "../models/UserModels"
+import jwt from "jsonwebtoken"
 
 declare global { 
     namespace Express { 
         interface Request { 
-            user : UserType
+            user? : UserType
         }
     }
 }
 
-export const userExist = async ( req : Request , res : Response , next : NextFunction ) => { 
+export const authenticate = async ( req : Request , res : Response , next : NextFunction ) => { 
 
-    //req.
+    const bearer = req.headers.authorization
 
-    //const userExist = await UserModel.findOne({ email : req.body.email })
+    if(!bearer) { 
+        const error =  new Error('No Autorizado')
+        res.status(401).json({ error : error.message})
+        return
+    }
+
+    // bearer 'token', vienen dos terminimos pero solo nos intera 'token'
+    const token = bearer.split(' ')[1]
+    // otra forma de quitar el bearer
+    //const [ , token ] = bearer.split('')
+
+    try {
+
+        const decode = jwt.verify( token , process.env.JWT_SECRET )
+
+        if( typeof decode == 'object' && decode.id ) {
+
+            const user = await UserModel.findById(decode.id)
+
+            if( user ) { 
+                
+                req.user = user 
+
+            } else { 
+
+                res.status(500).json( { error : "Token no valido"} )
+
+            }
+
+        }
+        
+    } catch (error) {
+
+        res.status(500).json({ error : "Token no valido"})
+
+    }
     
-   // next()
+    next()
 
 }

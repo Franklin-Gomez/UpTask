@@ -4,10 +4,13 @@ import { ProjectModel } from "../models/ProjectModels"
 export class ProjectControllers {
 
     public static async createProject( req : Request, res : Response) { 
-
+    
+        const project =  new ProjectModel( req.body)
+        
+        project.manager = req.user.id
+        
         try {
-
-            const project =  new ProjectModel( req.body)
+            
 
             await project.save()
 
@@ -20,12 +23,17 @@ export class ProjectControllers {
 
     }
 
-    public static async getAllProject( req : Request, res : Response) { 
+    public static async getAllProject( req : Request, res : Response) {
 
         try {
             
-            const projects = await ProjectModel.find().populate("tasks")
-
+            const projects = await ProjectModel.find(//{
+            //     $or : [
+            //         { manager : { $in : req.user.id }}
+            //     ]
+            // }
+            ).populate("tasks")
+                
             res.json(projects)
 
         } catch (error) {

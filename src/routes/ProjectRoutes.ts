@@ -6,6 +6,7 @@ import { taskExist } from "../middleware/task";
 import { NoteControllers } from "../controllers/NoteControllers";
 import { handleInputErrors } from "../middleware/validation";
 import { body, param } from "express-validator";
+import { authenticate } from "../middleware/auth";
 
 const router = Router()
 
@@ -15,8 +16,10 @@ router.param('projectId', projectExist)
 /** Project Routes **/
 
 router.post('/' ,
-    
-    body("projectname")
+
+    authenticate,
+
+    body("projectName")
         .notEmpty().withMessage("El nombre del proyecto es Obligatorio"),
         
     handleInputErrors

@@ -8,11 +8,12 @@ import authRoutes from './routes/AuthRoutes'
 // leer las variables de entorno
 dotenv.config()
 
-// conexion a la base de datos
-conectDB()
 
 // iniciar el servidor
 export const app = express()
+
+// conexion a la base de datos
+conectDB()
 
 // permitir peticiones
 app.use( cors() )
