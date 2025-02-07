@@ -31,12 +31,14 @@ export const authenticate = async ( req : Request , res : Response , next : Next
 
         if( typeof decode == 'object' && decode.id ) {
 
-            const user = await UserModel.findById(decode.id)
+            const user = await UserModel.findById(decode.id).select('_id email name')
 
             if( user ) { 
                 
                 req.user = user 
 
+                next()
+                
             } else { 
 
                 res.status(500).json( { error : "Token no valido"} )
@@ -50,7 +52,6 @@ export const authenticate = async ( req : Request , res : Response , next : Next
         res.status(500).json({ error : "Token no valido"})
 
     }
-    
-    next()
+
 
 }

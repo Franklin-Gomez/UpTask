@@ -1,4 +1,4 @@
-import { Request , Response } from "express"
+import { NextFunction, Request , Response } from "express"
 import { UserModel } from "../models/UserModels"
 import { checkPassword, hasPassword } from "../utils/auth"
 import { tokenModels } from "../models/TokenModels"
@@ -242,6 +242,10 @@ export class AuthControllers {
 
         }
 
+    }
+
+    static user = ( req : Request , res : Response , next : NextFunction) => { 
+        res.json( req.user )
     }
 
 

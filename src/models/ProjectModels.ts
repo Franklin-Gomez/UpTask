@@ -18,10 +18,9 @@ const projectSchema = new mongoose.Schema({
         trim : true
     },
 
-    clientName : { 
+    clientName : {  
         type : String,
         required : true,
-        unique : true,
         trim : true
     }, 
 

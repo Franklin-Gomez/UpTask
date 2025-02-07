@@ -1,5 +1,6 @@
 import { Request , Response } from "express"
 import { ProjectModel } from "../models/ProjectModels"
+import { AuthControllers } from "./AuthControllers"
 
 export class ProjectControllers {
 
@@ -10,8 +11,6 @@ export class ProjectControllers {
         project.manager = req.user.id
         
         try {
-            
-
             await project.save()
 
             res.send('projecto creado correctamente')
@@ -27,11 +26,11 @@ export class ProjectControllers {
 
         try {
             
-            const projects = await ProjectModel.find(//{
-            //     $or : [
-            //         { manager : { $in : req.user.id }}
-            //     ]
-            // }
+            const projects = await ProjectModel.find({
+                $or : [
+                    { manager : { $in : req.user.id }}
+                ]
+            }
             ).populate("tasks")
                 
             res.json(projects)
@@ -58,6 +57,12 @@ export class ProjectControllers {
                 return;
             }
 
+            if( project.manager.toString() !== req.user.id.toString() ) { 
+                const error = new Error('Accion no valida')
+                res.status(404).json( {error : error.message})
+                return;
+            }
+
             res.json( project )
 
         } catch (error) {
@@ -69,16 +74,40 @@ export class ProjectControllers {
     }
 
     public static async updateProject( req : Request, res : Response) { 
+            
+        // const id = req.params.projectId
 
-        const id = req.params.projectId
-
-        const newData = req.body
+        // const newData = req.body
+        
+        // const project = await ProjectModel.findByIdAndUpdate( id , newData )
 
         try {
-            
-            const project = await ProjectModel.findByIdAndUpdate( id , newData )
 
-            res.json( project )
+           const id = req.params.projectId
+
+           const project =  await ProjectModel.findById( id )
+
+           if(!project) { 
+               const error = new Error('proyecto no encontrado')
+               res.status(404).json({ error : error.message})
+               return
+            }
+
+           if( project.manager.toString() !== req.user.id.toString() ) { 
+                const error = new Error('Solo el Manager puede Actualizar el proyecto')
+                res.status(404).json( {error : error.message})
+                return
+           }
+
+            req.project.clientName = req.body.clientName
+            req.project.projectName = req.body.projectName
+            req.project.description = req.body.description
+
+            await req.project.save()
+
+            //devolvemos al front
+            //res.send('Proyecto Actualizado')
+            res.json( req.project )
 
         } catch (error) {
 
@@ -93,9 +122,27 @@ export class ProjectControllers {
 
         try {
             
-            await ProjectModel.findByIdAndDelete( id )
+            // await ProjectModel.findByIdAndDelete( id )
 
-            res.send( 'Eliminado Correctamente')
+            // res.send( 'Eliminado Correctamente')
+
+            const data = await ProjectModel.findById(id)
+            
+            if(!data) { 
+                const error = new Error('proyecto no encontrado')
+                res.status(404).json({ error : error.message})
+                return
+            }
+
+            if( data.manager.toString() !== req.user.id.toString() ) { 
+                const error = new Error('Solo el Manager puede eliminar un Proyecto')
+                res.status(404).json( {error : error.message})
+                return 
+            }
+
+            await req.project.deleteOne()
+
+            res.send('Proyect eliminado')
 
         } catch (error) {
 

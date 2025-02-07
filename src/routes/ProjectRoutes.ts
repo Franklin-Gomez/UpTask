@@ -15,9 +15,9 @@ router.param('projectId', projectExist)
 
 /** Project Routes **/
 
-router.post('/' ,
+router.use( authenticate )
 
-    authenticate,
+router.post('/' ,
 
     body("projectName")
         .notEmpty().withMessage("El nombre del proyecto es Obligatorio"),
@@ -26,14 +26,16 @@ router.post('/' ,
 
 ,ProjectControllers.createProject )
 
-router.get('/' , ProjectControllers.getAllProject )
+router.get('/' , 
+        
+ProjectControllers.getAllProject )
 
 router.get('/:projectId' , 
 
-    param('id')
-        .isMongoId().withMessage('id no valido'), 
+    param('projectId')
+        .notEmpty().withMessage('id no valido'), 
     
-    handleInputErrors,
+    // handleInputErrors,
 
 ProjectControllers.getOneProject )
 
