@@ -43,6 +43,12 @@ router.put('/:projectId' , ProjectControllers.updateProject )
 
 router.delete('/:projectId' , ProjectControllers.deleteProject )
 
+/** Team Member **/
+
+router.post('/:projectId/team/find' , ProjectControllers.findMemberByEmail)
+
+router.post('/:projectId/team' , ProjectControllers.addMemberById)
+
 
 // verificamos que la tarea exista  de forma global
 router.param('taskId' , taskExist)

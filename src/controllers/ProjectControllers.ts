@@ -1,6 +1,7 @@
 import { Request , Response } from "express"
 import { ProjectModel } from "../models/ProjectModels"
 import { AuthControllers } from "./AuthControllers"
+import { UserModel } from "../models/UserModels"
 
 export class ProjectControllers {
 
@@ -11,6 +12,9 @@ export class ProjectControllers {
         project.manager = req.user.id
         
         try {
+
+            console.log( project )
+
             await project.save()
 
             res.send('projecto creado correctamente')
@@ -149,5 +153,47 @@ export class ProjectControllers {
             console.log( error )
 
         }
+    }
+
+    public static async findMemberByEmail ( req : Request , res : Response ) { 
+
+        const email = req.body.email
+
+        const UserExist = await UserModel.findOne({ email : email })
+
+        if( !UserExist ) { 
+            const error = new Error('Usuario no encontrado')
+            res.status(404).json({ error : error.message })
+        }
+
+        res.json( UserExist )
+
+    }
+
+    public static async addMemberById ( req : Request , res : Response ) { 
+
+        const id = req.body.id
+
+        const UserExist = await UserModel.findById( id ).select('_id')
+
+        if( !UserExist ) { 
+            const error = new Error('Usuario no encontrado')
+            res.status(404).json({ error : error.message })
+        }
+
+        const validacion =  req.project.team.some( member => member._id.toString() == UserExist._id.toString() )
+
+        if( validacion ) { 
+            const error = new Error("usuario ya registrado")
+            res.status(404).json({ error : error.message})
+            return;
+        }
+
+        req.project.team.push( id.toString() )
+
+        await req.project.save()
+
+        res.send( req.project )
+
     }
 }
