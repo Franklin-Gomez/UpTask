@@ -196,4 +196,38 @@ export class ProjectControllers {
         res.send( req.project )
 
     }
+
+    public static async removeMemberById ( req : Request , res : Response ) { 
+
+        const id = req.body.id
+
+        const UserExist = await UserModel.findById( id ).select('_id')
+
+        if( !UserExist ) { 
+            const error = new Error('Usuario no encontrado')
+            res.status(404).json({ error : error.message })
+            return
+        }
+
+        const newArray = req.project.team.filter(member => member._id.toString() != UserExist.id.toString() ) 
+
+        req.project.team = newArray
+
+        await req.project.save()
+
+        res.send( 'Miembro Eliminado correctamente' )
+
+    }
+
+    public static async getProjectsTeam ( req : Request , res : Response ) { 
+
+        const project = await ProjectModel.findById( req.project.id ).populate({
+            path : 'team',
+            select : 'id email name'
+        })
+
+        res.json( project.team )
+    }
+
+
 }

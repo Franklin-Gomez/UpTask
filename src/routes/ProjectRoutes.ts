@@ -49,6 +49,10 @@ router.post('/:projectId/team/find' , ProjectControllers.findMemberByEmail)
 
 router.post('/:projectId/team' , ProjectControllers.addMemberById)
 
+router.delete('/:projectId/team' , ProjectControllers.removeMemberById)
+
+router.get('/:projectId/team' , ProjectControllers.getProjectsTeam)
+
 
 // verificamos que la tarea exista  de forma global
 router.param('taskId' , taskExist)
