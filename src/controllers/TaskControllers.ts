@@ -1,6 +1,7 @@
 import { Request , Response } from "express"
 import { TaskModel } from "../models/TaskModels"
 import { ProjectModel } from "../models/ProjectModels"
+import { NoteModel } from "../models/NoteModels"
 
 
 export class TaskControllers {
@@ -33,7 +34,7 @@ export class TaskControllers {
         } catch (error) {
 
             res.status(404).send({ error : error.message})
-
+    
         }
 
     }
@@ -134,6 +135,10 @@ export class TaskControllers {
                 }
 
                 const task = await TaskModel.findByIdAndDelete( taskId )
+
+                const note = await NoteModel.findOneAndDelete({ task : taskId })
+
+                await Promise.allSettled([ task , note ])
 
                 req.project.tasks = req.project.tasks.filter( task => task.toString() !== taskId)
 

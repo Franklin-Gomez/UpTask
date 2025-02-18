@@ -29,5 +29,9 @@ router.post('/update-password/:token' , AuthControllers.updatePasswordWithToken 
 
 router.get('/' , authenticate , AuthControllers.user )
 
+// ------------ profile --------------------
+
+router.post('/auth/profile' , authenticate , AuthControllers.updateProfile )
+
 
 export default router

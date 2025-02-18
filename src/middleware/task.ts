@@ -34,3 +34,16 @@ export const  taskExist = async ( req : Request , res : Response , next : NextFu
 
     }
 }
+
+export const hasAuthorization = ( req : Request , res : Response , next : NextFunction ) => { 
+
+    // si el usuario que esta realizando estas acciones no es el manager
+    if( req.user.id.toString() !== req.project.manager.toString()) { 
+        const error = new Error('No eres el Manager ')
+        res.status(400).json({ error : error.message})
+        return;
+    }
+
+    next()
+
+}

@@ -3,7 +3,7 @@ import mongoose, { Document, Types } from "mongoose";
 
 export type noteSchemaType = Document & { 
     content : string,
-    createBy : string,
+    createdBy : Types.ObjectId,
     task : Types.ObjectId
 }
 
@@ -15,8 +15,9 @@ const noteSchema  = new mongoose.Schema({
     },
 
     createdBy : { 
-        type : String,
-        default : 'user'
+        type : Types.ObjectId,
+        ref : 'User',
+        required : true
     },
 
     task : { 

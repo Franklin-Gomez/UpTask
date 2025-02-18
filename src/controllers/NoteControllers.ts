@@ -7,7 +7,7 @@ export class NoteControllers {
     public static async  createNote ( req : Request , res : Response ){ 
 
         const note = new NoteModel( req.body )
-
+        note.createdBy = req.user.id    
         note.task = req.task.id
 
         req.task.notes.push(note.id)

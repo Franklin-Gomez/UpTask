@@ -32,7 +32,9 @@ export class ProjectControllers {
             
             const projects = await ProjectModel.find({
                 $or : [
-                    { manager : { $in : req.user.id }}
+                    { manager : { $in : req.user.id }},
+                    { team : { $in : req.user.id }}
+
                 ]
             }
             ).populate("tasks")
@@ -61,11 +63,12 @@ export class ProjectControllers {
                 return;
             }
 
-            if( project.manager.toString() !== req.user.id.toString() ) { 
-                const error = new Error('Accion no valida')
-                res.status(404).json( {error : error.message})
-                return;
-            }
+            // // solo el manager puede ver los detalles del proyecto
+            // if( project.manager.toString() !== req.user.id.toString() ) { 
+            //     const error = new Error('Accion no valida')
+            //     res.status(404).json( {error : error.message})
+            //     return;
+            // }
 
             res.json( project )
 
@@ -159,11 +162,12 @@ export class ProjectControllers {
 
         const email = req.body.email
 
-        const UserExist = await UserModel.findOne({ email : email })
+        const UserExist = await UserModel.findOne({ email : email }).select('_id email name')
 
         if( !UserExist ) { 
             const error = new Error('Usuario no encontrado')
             res.status(404).json({ error : error.message })
+            return
         }
 
         res.json( UserExist )
@@ -179,6 +183,7 @@ export class ProjectControllers {
         if( !UserExist ) { 
             const error = new Error('Usuario no encontrado')
             res.status(404).json({ error : error.message })
+            return
         }
 
         const validacion =  req.project.team.some( member => member._id.toString() == UserExist._id.toString() )
@@ -186,20 +191,20 @@ export class ProjectControllers {
         if( validacion ) { 
             const error = new Error("usuario ya registrado")
             res.status(404).json({ error : error.message})
-            return;
+            return
         }
 
         req.project.team.push( id.toString() )
 
         await req.project.save()
 
-        res.send( req.project )
+        res.send( 'Usuario Agregado correctamente' )
 
     }
 
     public static async removeMemberById ( req : Request , res : Response ) { 
 
-        const id = req.body.id
+        const id = req.params.userId
 
         const UserExist = await UserModel.findById( id ).select('_id')
 
@@ -228,6 +233,5 @@ export class ProjectControllers {
 
         res.json( project.team )
     }
-
 
 }

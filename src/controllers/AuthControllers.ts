@@ -4,7 +4,6 @@ import { checkPassword, hasPassword } from "../utils/auth"
 import { tokenModels } from "../models/TokenModels"
 import { generateToken } from "../utils/token"
 import { AuthEmail } from "../email/AuthEmail"
-import { Model } from "mongoose"
 import { generateJWT } from "../utils/jwt"
 
 export class AuthControllers {
@@ -248,6 +247,35 @@ export class AuthControllers {
         res.json( req.user )
     }
 
+    //---------------------------  PROFILE  ------------------------------------
 
+
+    static updateProfile = async ( req : Request , res : Response ) => { 
+
+
+        const userExist = await UserModel.findOne( { email : req.body.email} )
+
+        if( !userExist ) { 
+            const error = new Error("Usuario no Encontrado")
+            res.status(404).json({ error : error.message })
+            return
+        }
+
+        req.user.name = req.body.name
+        req.user.email = req.body.email
+
+        try {
+
+            await req.user.save()
+
+            res.status(200).json("Cambios Guardados Satisfactoriamente")
+            
+        } catch (error) {
+
+            res.status(500).json({ error : "Hubo un error"})
+
+        }
+
+    }
 
 }
