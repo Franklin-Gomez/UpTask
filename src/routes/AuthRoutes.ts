@@ -33,5 +33,7 @@ router.get('/' , authenticate , AuthControllers.user )
 
 router.post('/auth/profile' , authenticate , AuthControllers.updateProfile )
 
+router.post('/auth/update-password' , authenticate , AuthControllers.updateCurrentUserPassword)
+
 
 export default router

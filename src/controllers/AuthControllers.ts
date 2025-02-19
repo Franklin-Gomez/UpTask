@@ -278,4 +278,40 @@ export class AuthControllers {
 
     }
 
+    static updateCurrentUserPassword = async ( req : Request , res : Response ) => { 
+
+        const { currentPassword , newPassword , newPasswordRepeat } = req.body
+
+        const userExist = await UserModel.findById( req.user.id )
+
+        if( !userExist ) { 
+            const error = new Error("Usuario no Encontrado")
+            res.status(404).json({ error : error.message })
+            return
+        }
+
+        const validatePassword = checkPassword( currentPassword , userExist.password )
+
+        if( !validatePassword ) { 
+            const error = new Error("Usuario no Encontrado")
+            res.status(404).json({ error : error.message })
+            return
+        }
+
+        try {
+            userExist.password = await hasPassword( newPassword )
+    
+            await userExist.save()
+    
+            res.send("Contraseña Cambiado Correctamente")
+            
+        } catch (error) {
+            
+            res.status(500).json({ error : "Hubo un error"})
+        
+        }
+
+
+    }
+
 }
